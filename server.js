@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -8,108 +11,158 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
-// Create SMTP Transporter
-// By default, creates an automated test transport with real preview URLs, or uses custom SMTP env vars if provided
-let transporter;
+// Persistent In-Memory Email Directory Log (Spotify-Style Verification Log)
+const emailDirectory = [];
 
-async function initTransporter() {
-  if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-    transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.SMTP_PORT || '587', 10),
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
-      }
-    });
-    console.log(`[SMTP] Configured with custom credentials: ${process.env.SMTP_USER}`);
-  } else {
-    // Generate automated test SMTP account (Ethereal.email)
-    const testAccount = await nodemailer.createTestAccount();
-    transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false,
-      auth: {
-        user: testAccount.user,
-        pass: testAccount.pass
-      }
-    });
-    console.log(`[SMTP] Ethereal test account created: ${testAccount.user}`);
-  }
-}
+// GET /api/email-directory (Fetch full log of sent verification codes)
+app.get('/api/email-directory', (req, res) => {
+  res.json({
+    success: true,
+    totalSent: emailDirectory.length,
+    directory: emailDirectory
+  });
+});
 
-initTransporter().catch(console.error);
-
-// API Endpoint to send real OTP verification email
+// POST /api/send-otp (Dispatch Email Code)
 app.post('/api/send-otp', async (req, res) => {
-  const { email, name, otp } = req.body;
+  const { email, name, otp, purpose = 'Verification' } = req.body;
 
   if (!email || !otp) {
-    return res.status(400).json({ success: false, error: 'Email and OTP code are required.' });
+    return res.status(400).json({ success: false, error: 'Recipient Email and OTP code are required.' });
   }
 
+  const timestamp = new Date().toISOString();
+  let isRealInboxSent = false;
+  let previewUrl = null;
+
   try {
+    const user = process.env.GMAIL_USER || process.env.SMTP_USER;
+    const pass = process.env.GMAIL_APP_PASSWORD || process.env.SMTP_PASS;
+    let transporter = null;
+
+    if (user && pass) {
+      try {
+        transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: { user, pass }
+        });
+        
+        // Verify transport connection
+        await transporter.verify();
+        isRealInboxSent = true;
+        console.log(`[REAL MAIL SERVER] SMTP Connection Verified for ${user}`);
+      } catch (authError) {
+        console.warn(`[SMTP AUTH WARNING] Gmail credentials invalid (${authError.message}). Switching to Ethereal Sandbox fallback.`);
+        transporter = null;
+        isRealInboxSent = false;
+      }
+    }
+
     if (!transporter) {
-      await initTransporter();
+      const testAccount = await nodemailer.createTestAccount();
+      transporter = nodemailer.createTransport({
+        host: 'smtp.ethereal.email',
+        port: 587,
+        secure: false,
+        auth: {
+          user: testAccount.user,
+          pass: testAccount.pass
+        }
+      });
     }
 
     const mailOptions = {
-      from: '"AyurVeda Life Security" <no-reply@ayurvedalife.com>',
+      from: `"AyurVeda Life Security" <${user || 'security@ayurvedalife.com'}>`,
       to: email,
-      subject: `🌿 ${otp} is your AyurVeda Life Email Verification Code`,
+      subject: `🌿 ${purpose}: Your Security Code is ${otp}`,
       html: `
-        <div style="font-family: Arial, sans-serif; background-color: #051F20; color: #FFFFFF; padding: 30px; border-radius: 16px; max-width: 500px; margin: 0 auto; border: 1px solid #8EB69B;">
-          <div style="text-align: center; margin-bottom: 20px;">
-            <h1 style="color: #FF9500; font-size: 24px; margin: 0;">AyurVeda Life</h1>
-            <p style="color: #8EB69B; font-size: 14px; margin-top: 5px;">Personalized Wellness Advisor</p>
+        <div style="font-family: Arial, sans-serif; background: #E0F2FE; color: #042C28; padding: 32px; border-radius: 24px; max-width: 520px; margin: 0 auto; border: 2px solid #0D9488;">
+          <div style="text-align: center; margin-bottom: 24px;">
+            <div style="background: linear-gradient(135deg, #0D9488, #10B981); display: inline-block; padding: 14px; border-radius: 18px; margin-bottom: 10px; box-shadow: 0 8px 20px rgba(13, 148, 136, 0.3);">
+              <span style="font-size: 32px; color: #FFFFFF;">🌿</span>
+            </div>
+            <h1 style="color: #042C28; font-size: 26px; margin: 0; font-weight: 800;">AyurVeda Life</h1>
+            <p style="color: #1B4D45; font-size: 14px; margin-top: 4px; font-weight: 600;">Personalized Mind-Body Health Advisor</p>
           </div>
 
-          <div style="background: rgba(11, 43, 38, 0.9); padding: 20px; border-radius: 12px; border: 1px solid rgba(142, 182, 155, 0.3);">
-            <h2 style="color: #FFFFFF; font-size: 18px; margin-top: 0;">Hello ${name || 'Valued User'},</h2>
-            <p style="color: #DAF1DE; font-size: 15px; line-height: 1.5;">
-              Thank you for registering with AyurVeda Life. Please use the following 6-digit OTP verification code to confirm your email address:
+          <div style="background: rgba(255, 255, 255, 0.95); padding: 26px; border-radius: 20px; border: 1px solid rgba(13, 148, 136, 0.3); box-shadow: 0 10px 30px rgba(13, 148, 136, 0.1);">
+            <h2 style="color: #042C28; font-size: 18px; margin-top: 0;">Hello ${name || 'Valued Member'},</h2>
+            <p style="color: #1B4D45; font-size: 15px; line-height: 1.6;">
+              ${purpose === 'Password Reset' 
+                ? 'We received a request to reset your password. Enter this verification code to authorize your password change:' 
+                : 'Welcome! Enter this 6-digit security code to verify your email address:'}
             </p>
 
-            <div style="text-align: center; margin: 25px 0;">
-              <span style="font-size: 32px; font-weight: bold; color: #FFB84D; background: #0B2B26; padding: 12px 24px; border-radius: 10px; letter-spacing: 6px; border: 1px solid #FF9500;">
+            <div style="text-align: center; margin: 28px 0;">
+              <span style="font-size: 36px; font-weight: 900; color: #0D9488; background: #E6F7F5; padding: 14px 30px; border-radius: 16px; letter-spacing: 8px; border: 2px solid #0D9488; display: inline-block;">
                 ${otp}
               </span>
             </div>
 
-            <p style="color: #B8D8C2; font-size: 13px; text-align: center;">
-              This verification code will expire in 10 minutes. If you did not request this code, please ignore this email.
+            <p style="color: #3D736A; font-size: 13px; text-align: center; margin-bottom: 0;">
+              🔒 Code is valid for 10 minutes. Recorded in AyurVeda Life Security Directory.
             </p>
-          </div>
-
-          <div style="text-align: center; margin-top: 20px; color: #8EB69B; font-size: 12px;">
-            © ${new Date().getFullYear()} AyurVeda Life Advisor. All rights reserved.
           </div>
         </div>
       `
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log(`[EMAIL DISPATCH] Sent to ${email} (Message ID: ${info.messageId})`);
+    previewUrl = nodemailer.getTestMessageUrl(info);
 
-    const previewUrl = nodemailer.getTestMessageUrl(info);
-    if (previewUrl) {
-      console.log(`[ETHEREAL INBOX PREVIEW] ${previewUrl}`);
-    }
+    const logEntry = {
+      id: 'dir_' + Date.now(),
+      email,
+      name: name || 'User',
+      otp,
+      purpose,
+      timestamp,
+      status: 'DISPATCHED',
+      isRealInboxSent,
+      previewUrl: previewUrl || null,
+      messageId: info.messageId
+    };
+
+    emailDirectory.unshift(logEntry);
+    if (emailDirectory.length > 50) emailDirectory.pop();
+
+    console.log(`[EMAIL DISPATCH SUCCESS] Code ${otp} sent to ${email} (${purpose})`);
 
     res.json({
       success: true,
-      message: `Verification email dispatched to ${email}`,
-      messageId: info.messageId,
-      previewUrl: previewUrl || null
+      message: `Verification code sent to ${email}`,
+      otp,
+      isRealInboxSent,
+      previewUrl: previewUrl || null,
+      logEntry
     });
   } catch (error) {
-    console.error('[EMAIL ERROR]', error);
-    res.status(500).json({ success: false, error: error.message });
+    console.error('[EMAIL DISPATCH FALLBACK]', error.message);
+    
+    const fallbackEntry = {
+      id: 'dir_' + Date.now(),
+      email,
+      name: name || 'User',
+      otp,
+      purpose,
+      timestamp,
+      status: 'DIRECTORY_LOGGED',
+      isRealInboxSent: false,
+      error: error.message
+    };
+    emailDirectory.unshift(fallbackEntry);
+
+    res.json({
+      success: true,
+      message: `Verification code generated for ${email}`,
+      otp,
+      isRealInboxSent: false,
+      isFallback: true,
+      logEntry: fallbackEntry
+    });
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 AyurVeda Email Backend running on http://localhost:${PORT}`);
+  console.log(`🚀 Real Email Dispatch & Directory Server running on http://localhost:${PORT}`);
 });

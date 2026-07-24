@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDosha } from '../context/DoshaContext';
 import { ProgressBar } from '../components/ProgressBar';
-import { ArrowLeft, ArrowRight, CheckCircle2, Sparkles, HelpCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 
 export const AssessmentPage = ({ onComplete }) => {
   const { questions, currentQuestionIndex, setCurrentQuestionIndex, userAnswers, handleSelectAnswer, calculateAndSaveResult } = useDosha();
@@ -41,28 +41,28 @@ export const AssessmentPage = ({ onComplete }) => {
   };
 
   return (
-    <div style={{ padding: '2.5rem 1rem', maxWidth: '750px', margin: '0 auto', width: '100%' }}>
+    <div style={{ padding: '2.5rem 1rem', maxWidth: '780px', margin: '0 auto', width: '100%' }}>
       {/* Category Badge */}
       <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
         <span style={{
-          background: 'rgba(255, 149, 0, 0.15)',
-          color: '#FFB84D',
-          border: '1px solid rgba(255, 149, 0, 0.4)',
+          background: 'rgba(186, 225, 100, 0.3)',
+          color: '#1A3323',
+          border: '1.5px solid #BAE164',
           borderRadius: '50px',
-          padding: '0.4rem 1rem',
+          padding: '0.45rem 1.1rem',
           fontSize: '0.8rem',
-          fontWeight: 700,
+          fontWeight: 800,
           textTransform: 'uppercase',
           letterSpacing: '0.06em',
           display: 'inline-flex',
           alignItems: 'center',
-          gap: '0.4rem'
+          gap: '0.45rem'
         }}>
-          <Sparkles size={14} /> {currentQ.category}
+          <Sparkles size={15} color="#1A3323" /> {currentQ.category}
         </span>
       </div>
 
-      <h1 style={{ textAlign: 'center', fontSize: '1.6rem', color: '#FFFFFF', marginBottom: '1.5rem' }}>
+      <h1 className="font-serif-title" style={{ textAlign: 'center', fontSize: '1.85rem', color: '#1A3323', marginBottom: '1.5rem', fontWeight: 800 }}>
         Ayurvedic Dosha Assessment
       </h1>
 
@@ -70,27 +70,28 @@ export const AssessmentPage = ({ onComplete }) => {
       <ProgressBar current={currentQuestionIndex + 1} total={questions.length} />
 
       {/* Question Card */}
-      <div className="glass-card" style={{ padding: '2rem 1.75rem', borderRadius: '24px', position: 'relative' }}>
-        <h2 style={{ fontSize: '1.25rem', color: '#DAF1DE', marginBottom: '1.5rem', lineHeight: '1.4' }}>
+      <div className="glass-card" style={{ padding: '2.4rem 2rem', borderRadius: '28px', position: 'relative' }}>
+        <h2 style={{ fontSize: '1.3rem', color: '#1A3323', marginBottom: '1.5rem', lineHeight: '1.4', fontWeight: 800 }}>
           {currentQ.text}
         </h2>
 
         {errorMsg && (
           <div style={{
-            background: 'rgba(239, 68, 68, 0.15)',
-            border: '1px solid rgba(239, 68, 68, 0.4)',
-            color: '#FCA5A5',
-            borderRadius: '10px',
-            padding: '0.65rem 1rem',
-            fontSize: '0.85rem',
-            marginBottom: '1.2rem'
+            background: 'rgba(239, 68, 68, 0.12)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            color: '#DC2626',
+            borderRadius: '12px',
+            padding: '0.75rem 1rem',
+            fontSize: '0.88rem',
+            marginBottom: '1.2rem',
+            fontWeight: 600
           }}>
             {errorMsg}
           </div>
         )}
 
         {/* Options */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.95rem' }}>
           {currentQ.options.map((opt) => {
             const isSelected = selectedOptionKey === opt.key;
             return (
@@ -102,45 +103,45 @@ export const AssessmentPage = ({ onComplete }) => {
                 }}
                 style={{
                   background: isSelected 
-                    ? 'linear-gradient(135deg, rgba(35, 83, 71, 0.9) 0%, rgba(11, 43, 38, 0.95) 100%)' 
-                    : 'rgba(5, 31, 32, 0.6)',
+                    ? 'rgba(240, 247, 232, 0.95)' 
+                    : 'rgba(253, 255, 249, 0.85)',
                   border: isSelected 
-                    ? '2px solid #FF9500' 
-                    : '1px solid rgba(142, 182, 155, 0.25)',
-                  borderRadius: '16px',
-                  padding: '1.1rem 1.25rem',
+                    ? '2px solid #BAE164' 
+                    : '1.5px solid rgba(26, 51, 35, 0.15)',
+                  borderRadius: '18px',
+                  padding: '1.15rem 1.35rem',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '1rem',
-                  transition: 'all 0.2s ease',
-                  boxShadow: isSelected ? '0 6px 20px rgba(255, 149, 0, 0.25)' : 'none'
+                  gap: '1.1rem',
+                  transition: 'all 0.22s ease',
+                  boxShadow: isSelected ? '0 6px 20px rgba(186, 225, 100, 0.3)' : 'none'
                 }}
               >
                 {/* Check / Circle Indicator */}
                 <div style={{
-                  width: '28px',
-                  height: '28px',
+                  width: '30px',
+                  height: '30px',
                   borderRadius: '50%',
-                  border: isSelected ? 'none' : '2px solid rgba(142, 182, 155, 0.4)',
-                  background: isSelected ? '#FF9500' : 'transparent',
+                  border: isSelected ? 'none' : '2px solid #1A3323',
+                  background: isSelected ? 'linear-gradient(135deg, #1A3323 0%, #2B5738 100%)' : 'transparent',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0
                 }}>
                   {isSelected ? (
-                    <CheckCircle2 size={20} color="#FFFFFF" />
+                    <CheckCircle2 size={22} color="#BAE164" />
                   ) : (
-                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#8EB69B' }}>{opt.key}</span>
+                    <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#1A3323' }}>{opt.key}</span>
                   )}
                 </div>
 
                 <div style={{ flex: 1 }}>
                   <p style={{
-                    color: isSelected ? '#FFFFFF' : '#DAF1DE',
-                    fontWeight: isSelected ? 600 : 400,
-                    fontSize: '0.98rem',
+                    color: '#1A3323',
+                    fontWeight: isSelected ? 700 : 500,
+                    fontSize: '1rem',
                     margin: 0
                   }}>
                     {opt.text}
@@ -156,9 +157,9 @@ export const AssessmentPage = ({ onComplete }) => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginTop: '2rem',
-          paddingTop: '1.25rem',
-          borderTop: '1px solid rgba(142, 182, 155, 0.2)'
+          marginTop: '2.2rem',
+          paddingTop: '1.35rem',
+          borderTop: '1.5px solid rgba(26, 51, 35, 0.12)'
         }}>
           <button
             onClick={handlePrev}
@@ -180,7 +181,6 @@ export const AssessmentPage = ({ onComplete }) => {
             <button
               onClick={handleSubmitQuiz}
               className="btn-primary"
-              style={{ background: 'linear-gradient(135deg, #FF9500 0%, #FFB84D 100%)' }}
             >
               Calculate My Dosha <Sparkles size={18} />
             </button>

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Leaf, Lock, Mail, ArrowRight, Sparkles, CheckCircle } from 'lucide-react';
+import { Leaf, Lock, Mail, ArrowRight, Sparkles } from 'lucide-react';
 
-export const LoginPage = ({ onSwitchToRegister }) => {
+export const LoginPage = ({ onSwitchToRegister, onSwitchToForgotPassword }) => {
   const { loginUser, authError, setAuthError } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,27 +14,32 @@ export const LoginPage = ({ onSwitchToRegister }) => {
       setAuthError('Please fill in both email and password.');
       return;
     }
-    loginUser(email, password, rememberMe);
+    loginUser(email, password);
   };
 
   const fillDemoAccount = () => {
-    // Register demo account if not exists
     const users = JSON.parse(localStorage.getItem('ayurveda_users') || '[]');
-    const demoEmail = 'user@ayurveda.com';
-    const demoPass = 'Password123';
+    const demoEmail = 'user@gmail.com';
+    const demoPass = '@user123';
     
-    if (!users.some(u => u.email === demoEmail)) {
-      users.push({
-        id: 'usr_demo',
-        name: 'Aarav Sharma',
-        email: demoEmail,
-        password: demoPass,
-        age: 32,
-        gender: 'Male',
-        createdAt: new Date().toISOString()
-      });
-      localStorage.setItem('ayurveda_users', JSON.stringify(users));
+    // Check or update demo account with exact specified user details
+    const existingIndex = users.findIndex(u => u.email.toLowerCase() === demoEmail.toLowerCase());
+    const demoUserData = {
+      id: 'usr_demo',
+      name: 'Lewise Morish',
+      email: demoEmail,
+      password: demoPass,
+      age: 25,
+      gender: 'Male',
+      createdAt: new Date().toISOString()
+    };
+
+    if (existingIndex !== -1) {
+      users[existingIndex] = { ...users[existingIndex], ...demoUserData };
+    } else {
+      users.push(demoUserData);
     }
+    localStorage.setItem('ayurveda_users', JSON.stringify(users));
 
     setEmail(demoEmail);
     setPassword(demoPass);
@@ -51,43 +56,44 @@ export const LoginPage = ({ onSwitchToRegister }) => {
       position: 'relative'
     }}>
       <div className="glass-card" style={{
-        maxWidth: '440px',
+        maxWidth: '460px',
         width: '100%',
-        padding: '2.5rem 2rem',
-        borderRadius: '28px',
-        boxShadow: '0 25px 60px rgba(0, 0, 0, 0.5)'
+        padding: '2.6rem 2.2rem',
+        borderRadius: '32px',
+        boxShadow: '0 25px 60px -10px rgba(26, 51, 35, 0.18)'
       }}>
-        {/* Header Branding */}
+        {/* Organic Luxury Header Branding */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{
-            background: 'linear-gradient(135deg, #FF9500 0%, #FFB84D 100%)',
-            width: '56px',
-            height: '56px',
-            borderRadius: '18px',
+            background: 'linear-gradient(135deg, #1A3323 0%, #2B5738 50%, #BAE164 100%)',
+            width: '60px',
+            height: '60px',
+            borderRadius: '20px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             margin: '0 auto 1rem auto',
-            boxShadow: '0 8px 20px rgba(255, 149, 0, 0.35)'
+            boxShadow: '0 8px 24px rgba(26, 51, 35, 0.28)',
+            border: '1.5px solid #BAE164'
           }}>
-            <Leaf size={30} color="#FFFFFF" />
+            <Leaf size={32} color="#FEFEFE" />
           </div>
           
-          <h1 style={{ fontSize: '1.75rem', color: '#FFFFFF', marginBottom: '0.3rem' }}>
-            Welcome to <span style={{ color: '#FF9500' }}>AyurVeda</span> Life
+          <h1 className="font-serif-title" style={{ fontSize: '1.85rem', color: '#1A3323', marginBottom: '0.3rem', fontWeight: 800 }}>
+            Welcome to <span style={{ color: '#B86B18' }}>AyurVeda</span> Life
           </h1>
           
-          <p style={{ fontSize: '0.9rem', color: '#B8D8C2' }}>
+          <p style={{ fontSize: '0.92rem', color: '#567360', fontWeight: 500 }}>
             Discover your Mind-Body Prakriti (Vata, Pitta, Kapha) & personalized wellness advice
           </p>
         </div>
 
-        {/* Demo Account Quick Button */}
+        {/* Quick Demo Account Button */}
         <div style={{
-          background: 'rgba(35, 83, 71, 0.4)',
-          border: '1px solid rgba(142, 182, 155, 0.3)',
-          borderRadius: '14px',
-          padding: '0.75rem 1rem',
+          background: 'rgba(240, 247, 232, 0.85)',
+          border: '1.5px solid #BAE164',
+          borderRadius: '16px',
+          padding: '0.8rem 1rem',
           marginBottom: '1.5rem',
           display: 'flex',
           alignItems: 'center',
@@ -95,21 +101,22 @@ export const LoginPage = ({ onSwitchToRegister }) => {
           gap: '0.5rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Sparkles size={18} color="#FFB84D" />
-            <span style={{ fontSize: '0.85rem', color: '#DAF1DE' }}>Want to test quickly?</span>
+            <Sparkles size={18} color="#B86B18" />
+            <span style={{ fontSize: '0.85rem', color: '#1A3323', fontWeight: 700 }}>Quick Test Account</span>
           </div>
           <button
             type="button"
             onClick={fillDemoAccount}
             style={{
-              background: 'rgba(255, 149, 0, 0.2)',
-              color: '#FFB84D',
-              border: '1px solid #FF9500',
+              background: 'linear-gradient(135deg, #B86B18 0%, #D97A24 100%)',
+              color: '#FEFEFE',
+              border: 'none',
               borderRadius: '8px',
-              padding: '0.35rem 0.75rem',
-              fontSize: '0.75rem',
-              fontWeight: 700,
-              cursor: 'pointer'
+              padding: '0.38rem 0.8rem',
+              fontSize: '0.78rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(184, 107, 24, 0.25)'
             }}
           >
             Fill Demo Login
@@ -118,13 +125,14 @@ export const LoginPage = ({ onSwitchToRegister }) => {
 
         {authError && (
           <div style={{
-            background: 'rgba(239, 68, 68, 0.15)',
-            border: '1px solid rgba(239, 68, 68, 0.4)',
-            color: '#FCA5A5',
+            background: 'rgba(239, 68, 68, 0.12)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            color: '#DC2626',
             borderRadius: '12px',
             padding: '0.75rem 1rem',
             fontSize: '0.85rem',
-            marginBottom: '1.25rem'
+            marginBottom: '1.25rem',
+            fontWeight: 600
           }}>
             {authError}
           </div>
@@ -137,13 +145,13 @@ export const LoginPage = ({ onSwitchToRegister }) => {
               <input
                 type="email"
                 className="form-input"
-                placeholder="name@example.com"
+                placeholder="user@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                style={{ width: '100%', paddingLeft: '2.5rem' }}
+                style={{ width: '100%', paddingLeft: '2.6rem' }}
                 required
               />
-              <Mail size={18} color="#8EB69B" style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)' }} />
+              <Mail size={18} color="#1A3323" style={{ position: 'absolute', left: '0.88rem', top: '50%', transform: 'translateY(-50%)' }} />
             </div>
           </div>
 
@@ -156,10 +164,10 @@ export const LoginPage = ({ onSwitchToRegister }) => {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                style={{ width: '100%', paddingLeft: '2.5rem' }}
+                style={{ width: '100%', paddingLeft: '2.6rem' }}
                 required
               />
-              <Lock size={18} color="#8EB69B" style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)' }} />
+              <Lock size={18} color="#1A3323" style={{ position: 'absolute', left: '0.88rem', top: '50%', transform: 'translateY(-50%)' }} />
             </div>
           </div>
 
@@ -170,16 +178,30 @@ export const LoginPage = ({ onSwitchToRegister }) => {
             marginBottom: '1.5rem',
             fontSize: '0.85rem'
           }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#B8D8C2', cursor: 'pointer' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#2B4534', fontWeight: 600, cursor: 'pointer' }}>
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                style={{ accentColor: '#FF9500' }}
+                style={{ accentColor: '#1A3323' }}
               />
               Remember me
             </label>
-            <span style={{ color: '#8EB69B', cursor: 'pointer' }}>Forgot password?</span>
+
+            <button
+              type="button"
+              onClick={onSwitchToForgotPassword}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#B86B18',
+                fontWeight: 800,
+                cursor: 'pointer',
+                fontSize: '0.85rem'
+              }}
+            >
+              Forgot password?
+            </button>
           </div>
 
           <button
@@ -191,16 +213,16 @@ export const LoginPage = ({ onSwitchToRegister }) => {
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(142, 182, 155, 0.2)' }}>
-          <p style={{ fontSize: '0.9rem', color: '#B8D8C2' }}>
+        <div style={{ textAlign: 'center', marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1.5px solid rgba(26, 51, 35, 0.12)' }}>
+          <p style={{ fontSize: '0.9rem', color: '#567360' }}>
             New to AyurVeda Life?{' '}
             <button
               onClick={onSwitchToRegister}
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#FFB84D',
-                fontWeight: 700,
+                color: '#B86B18',
+                fontWeight: 800,
                 cursor: 'pointer',
                 fontSize: '0.9rem'
               }}

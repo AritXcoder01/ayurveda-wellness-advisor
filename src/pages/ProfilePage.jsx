@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, Mail, Calendar, Save, Trash2, CheckCircle } from 'lucide-react';
+import { User, Mail, Save, Trash2, CheckCircle } from 'lucide-react';
 
 export const ProfilePage = () => {
   const { currentUser, updateProfile, authSuccess } = useAuth();
@@ -25,26 +25,27 @@ export const ProfilePage = () => {
   };
 
   return (
-    <div className="container" style={{ padding: '2.5rem 1rem', maxWidth: '600px', margin: '0 auto' }}>
-      <h1 style={{ fontSize: '1.6rem', color: '#FFFFFF', marginBottom: '1.5rem', textAlign: 'center' }}>
+    <div className="container" style={{ padding: '2.5rem 1rem', maxWidth: '620px', margin: '0 auto' }}>
+      <h1 className="font-serif-title" style={{ fontSize: '1.85rem', color: '#1A3323', marginBottom: '1.5rem', textAlign: 'center', fontWeight: 800 }}>
         User Profile & Settings
       </h1>
 
-      <div className="glass-card" style={{ padding: '2rem', borderRadius: '24px' }}>
+      <div className="glass-card" style={{ padding: '2.4rem 2rem', borderRadius: '32px' }}>
         {authSuccess && (
           <div style={{
-            background: 'rgba(34, 197, 94, 0.15)',
-            border: '1px solid rgba(34, 197, 94, 0.4)',
-            color: '#86EFAC',
+            background: 'rgba(186, 225, 100, 0.25)',
+            border: '1.5px solid #BAE164',
+            color: '#1A3323',
             borderRadius: '12px',
             padding: '0.75rem 1rem',
             fontSize: '0.88rem',
             marginBottom: '1.25rem',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.5rem'
+            gap: '0.5rem',
+            fontWeight: 800
           }}>
-            <CheckCircle size={18} /> {authSuccess}
+            <CheckCircle size={18} color="#1A3323" /> {authSuccess}
           </div>
         )}
 
@@ -57,10 +58,10 @@ export const ProfilePage = () => {
                 className="form-input"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                style={{ width: '100%', paddingLeft: '2.5rem' }}
+                style={{ width: '100%', paddingLeft: '2.6rem' }}
                 required
               />
-              <User size={18} color="#8EB69B" style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)' }} />
+              <User size={18} color="#1A3323" style={{ position: 'absolute', left: '0.88rem', top: '50%', transform: 'translateY(-50%)' }} />
             </div>
           </div>
 
@@ -72,10 +73,10 @@ export const ProfilePage = () => {
                 className="form-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                style={{ width: '100%', paddingLeft: '2.5rem' }}
+                style={{ width: '100%', paddingLeft: '2.6rem' }}
                 required
               />
-              <Mail size={18} color="#8EB69B" style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)' }} />
+              <Mail size={18} color="#1A3323" style={{ position: 'absolute', left: '0.88rem', top: '50%', transform: 'translateY(-50%)' }} />
             </div>
           </div>
 
@@ -88,7 +89,7 @@ export const ProfilePage = () => {
                 max="80"
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
-                style={{ width: '100%', accentColor: '#FF9500', cursor: 'pointer' }}
+                style={{ width: '100%', accentColor: '#1A3323', cursor: 'pointer' }}
               />
             </div>
 
@@ -110,24 +111,24 @@ export const ProfilePage = () => {
           <button
             type="submit"
             className="btn-primary"
-            style={{ width: '100%', padding: '0.9rem', marginTop: '0.5rem' }}
+            style={{ width: '100%', padding: '0.95rem', marginTop: '0.5rem' }}
           >
             <Save size={18} /> Save Changes
           </button>
         </form>
 
-        <div style={{ marginTop: '2rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(142, 182, 155, 0.2)' }}>
+        <div style={{ marginTop: '2rem', paddingTop: '1.25rem', borderTop: '1.5px solid rgba(26, 51, 35, 0.15)' }}>
           <button
             type="button"
             onClick={handleClearHistory}
             style={{
-              background: 'rgba(239, 68, 68, 0.15)',
-              color: '#FCA5A5',
-              border: '1px solid rgba(239, 68, 68, 0.4)',
-              borderRadius: '12px',
-              padding: '0.75rem 1.2rem',
-              fontSize: '0.85rem',
-              fontWeight: 600,
+              background: 'rgba(239, 68, 68, 0.12)',
+              color: '#DC2626',
+              border: '1.5px solid rgba(239, 68, 68, 0.3)',
+              borderRadius: '14px',
+              padding: '0.8rem 1.2rem',
+              fontSize: '0.88rem',
+              fontWeight: 800,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -136,7 +137,7 @@ export const ProfilePage = () => {
               width: '100%'
             }}
           >
-            <Trash2 size={16} /> Clear Assessment History
+            <Trash2 size={18} /> Clear Assessment History
           </button>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AlertCircle, Sparkles, ShieldCheck, RefreshCw, Zap } from 'lucide-react';
+import { ShieldCheck, Zap } from 'lucide-react';
 
 export const VikritiResetPage = () => {
   const [selectedSymptom, setSelectedSymptom] = useState(null);
@@ -10,7 +10,7 @@ export const VikritiResetPage = () => {
       dosha: 'Vata Imbalance (Air & Space Surge)',
       title: 'Anxiety, Bloating, Restless Mind & Insomnia',
       badge: 'Vata Acute Reset',
-      color: '#8EB69B',
+      color: '#1A3323',
       symptoms: [
         'Excessive worrying, anxiety, or racing thoughts',
         'Abdominal gas, bloating, or irregular constipation',
@@ -28,7 +28,7 @@ export const VikritiResetPage = () => {
       dosha: 'Pitta Imbalance (Fire Surge)',
       title: 'Irritability, Acidity, Overheating & Skin Breakouts',
       badge: 'Pitta Acute Reset',
-      color: '#FF9500',
+      color: '#B86B18',
       symptoms: [
         'Frustration, impatience, anger, or feeling overworked',
         'Acid reflux, heartburn, or intense burning hunger',
@@ -46,7 +46,7 @@ export const VikritiResetPage = () => {
       dosha: 'Kapha Imbalance (Earth Surge)',
       title: 'Lethargy, Congestion, Heavy Feeling & Brain Fog',
       badge: 'Kapha Acute Reset',
-      color: '#DAF1DE',
+      color: '#2B5738',
       symptoms: [
         'Feeling heavy, unmotivated, sluggish, or oversleeping',
         'Sinus congestion, mucus excess, or heavy chest',
@@ -62,32 +62,32 @@ export const VikritiResetPage = () => {
   ];
 
   return (
-    <div className="container" style={{ padding: '2.5rem 1rem', maxWidth: '800px', margin: '0 auto' }}>
+    <div className="container" style={{ padding: '2.5rem 1rem', maxWidth: '820px', margin: '0 auto' }}>
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <span style={{
-          background: 'rgba(255, 149, 0, 0.15)',
-          color: '#FFB84D',
-          border: '1px solid rgba(255, 149, 0, 0.4)',
-          padding: '0.4rem 1rem',
+          background: 'rgba(186, 225, 100, 0.3)',
+          color: '#1A3323',
+          border: '1.5px solid #BAE164',
+          padding: '0.45rem 1.1rem',
           borderRadius: '50px',
           fontSize: '0.8rem',
-          fontWeight: 700,
+          fontWeight: 800,
           textTransform: 'uppercase',
           letterSpacing: '0.06em',
           display: 'inline-flex',
           alignItems: 'center',
-          gap: '0.4rem',
-          marginBottom: '0.75rem'
+          gap: '0.45rem',
+          marginBottom: '0.85rem'
         }}>
-          <Zap size={14} /> Vikriti Imbalance Diagnostic
+          <Zap size={15} color="#1A3323" /> Vikriti Imbalance Diagnostic
         </span>
 
-        <h1 style={{ fontSize: '1.75rem', color: '#FFFFFF', marginBottom: '0.4rem' }}>
+        <h1 className="font-serif-title" style={{ fontSize: '1.85rem', color: '#1A3323', marginBottom: '0.4rem', fontWeight: 800 }}>
           24-Hour Acute Imbalance Reset Protocol
         </h1>
         
-        <p style={{ color: '#B8D8C2', fontSize: '0.95rem' }}>
+        <p style={{ color: '#567360', fontSize: '0.96rem', fontWeight: 500 }}>
           Feeling off today? Select your current temporary symptom to generate an immediate 24-hour Ayurvedic reset plan.
         </p>
       </div>
@@ -102,39 +102,39 @@ export const VikritiResetPage = () => {
               onClick={() => setSelectedSymptom(item)}
               className="glass-card"
               style={{
-                borderRadius: '24px',
-                padding: '1.5rem',
+                borderRadius: '26px',
+                padding: '1.6rem',
                 cursor: 'pointer',
-                border: isSelected ? `2px solid ${item.color}` : '1px solid rgba(142, 182, 155, 0.25)',
-                background: isSelected ? 'rgba(35, 83, 71, 0.85)' : 'rgba(5, 31, 32, 0.6)',
+                border: isSelected ? '2px solid #BAE164' : '1.5px solid rgba(26, 51, 35, 0.15)',
+                background: isSelected ? 'rgba(240, 247, 232, 0.95)' : 'rgba(253, 255, 249, 0.8)',
                 transition: 'all 0.25s ease'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
                 <span style={{
-                  background: `${item.color}22`,
-                  color: item.color,
-                  border: `1px solid ${item.color}44`,
-                  padding: '0.25rem 0.75rem',
+                  background: 'rgba(184, 107, 24, 0.12)',
+                  color: '#B86B18',
+                  border: '1.5px solid rgba(184, 107, 24, 0.35)',
+                  padding: '0.28rem 0.8rem',
                   borderRadius: '50px',
                   fontSize: '0.78rem',
-                  fontWeight: 700
+                  fontWeight: 800
                 }}>
                   {item.badge}
                 </span>
 
-                <span style={{ fontSize: '0.85rem', color: '#FFB84D', fontWeight: 600 }}>
+                <span style={{ fontSize: '0.85rem', color: '#1A3323', fontWeight: 800 }}>
                   {isSelected ? 'Selected ✓' : 'Click to Diagnose'}
                 </span>
               </div>
 
-              <h3 style={{ fontSize: '1.2rem', color: '#FFFFFF', marginBottom: '0.5rem' }}>
+              <h3 style={{ fontSize: '1.22rem', color: '#1A3323', marginBottom: '0.5rem', fontWeight: 800 }}>
                 {item.title}
               </h3>
 
-              <ul style={{ paddingLeft: '1.2rem', color: '#B8D8C2', fontSize: '0.88rem' }}>
+              <ul style={{ paddingLeft: '1.2rem', color: '#2B4534', fontSize: '0.9rem' }}>
                 {item.symptoms.map((s, idx) => (
-                  <li key={idx} style={{ marginBottom: '0.2rem' }}>{s}</li>
+                  <li key={idx} style={{ marginBottom: '0.25rem', fontWeight: 500 }}>{s}</li>
                 ))}
               </ul>
             </div>
@@ -145,49 +145,49 @@ export const VikritiResetPage = () => {
       {/* Display Protocol */}
       {selectedSymptom && (
         <div className="glass-card" style={{
-          padding: '2rem',
-          borderRadius: '24px',
-          border: `2px solid ${selectedSymptom.color}`,
-          background: 'linear-gradient(135deg, rgba(11, 43, 38, 0.95) 0%, rgba(35, 83, 71, 0.9) 100%)'
+          padding: '2.2rem',
+          borderRadius: '28px',
+          border: '2px solid #BAE164',
+          background: 'linear-gradient(135deg, rgba(249, 251, 242, 0.95) 0%, rgba(240, 247, 232, 0.9) 100%)'
         }}>
-          <h2 style={{ fontSize: '1.4rem', color: '#FFFFFF', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <ShieldCheck color={selectedSymptom.color} size={24} /> 
+          <h2 className="font-serif-title" style={{ fontSize: '1.45rem', color: '#1A3323', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.6rem', fontWeight: 800 }}>
+            <ShieldCheck color="#1A3323" size={26} /> 
             24-Hour Reset Action Plan for {selectedSymptom.dosha}
           </h2>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div style={{ background: 'rgba(5, 31, 32, 0.6)', padding: '1rem', borderRadius: '14px', borderLeft: `4px solid ${selectedSymptom.color}` }}>
-              <strong style={{ color: '#FFB84D', display: 'block', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
+            <div style={{ background: 'rgba(253, 255, 249, 0.95)', padding: '1rem 1.2rem', borderRadius: '16px', borderLeft: '5px solid #B86B18', border: '1px solid rgba(26, 51, 35, 0.1)' }}>
+              <strong style={{ color: '#B86B18', display: 'block', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '0.3rem', fontWeight: 800 }}>
                 1. Immediate Emergency Action
               </strong>
-              <p style={{ color: '#DAF1DE', fontSize: '0.92rem', margin: 0 }}>
+              <p style={{ color: '#2B4534', fontSize: '0.92rem', margin: 0, fontWeight: 500 }}>
                 {selectedSymptom.protocol.immediateAction}
               </p>
             </div>
 
-            <div style={{ background: 'rgba(5, 31, 32, 0.6)', padding: '1rem', borderRadius: '14px', borderLeft: `4px solid ${selectedSymptom.color}` }}>
-              <strong style={{ color: '#8EB69B', display: 'block', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
+            <div style={{ background: 'rgba(253, 255, 249, 0.95)', padding: '1rem 1.2rem', borderRadius: '16px', borderLeft: '5px solid #BAE164', border: '1px solid rgba(26, 51, 35, 0.1)' }}>
+              <strong style={{ color: '#1A3323', display: 'block', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '0.3rem', fontWeight: 800 }}>
                 2. Dietary Reset Meals
               </strong>
-              <p style={{ color: '#DAF1DE', fontSize: '0.92rem', margin: 0 }}>
+              <p style={{ color: '#2B4534', fontSize: '0.92rem', margin: 0, fontWeight: 500 }}>
                 {selectedSymptom.protocol.dietReset}
               </p>
             </div>
 
-            <div style={{ background: 'rgba(5, 31, 32, 0.6)', padding: '1rem', borderRadius: '14px', borderLeft: `4px solid ${selectedSymptom.color}` }}>
-              <strong style={{ color: '#DAF1DE', display: 'block', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
+            <div style={{ background: 'rgba(253, 255, 249, 0.95)', padding: '1rem 1.2rem', borderRadius: '16px', borderLeft: '5px solid #1A3323', border: '1px solid rgba(26, 51, 35, 0.1)' }}>
+              <strong style={{ color: '#1A3323', display: 'block', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '0.3rem', fontWeight: 800 }}>
                 3. Lifestyle & Mindset Reset
               </strong>
-              <p style={{ color: '#DAF1DE', fontSize: '0.92rem', margin: 0 }}>
+              <p style={{ color: '#2B4534', fontSize: '0.92rem', margin: 0, fontWeight: 500 }}>
                 {selectedSymptom.protocol.lifestyleReset}
               </p>
             </div>
 
-            <div style={{ background: 'rgba(5, 31, 32, 0.6)', padding: '1rem', borderRadius: '14px', borderLeft: `4px solid ${selectedSymptom.color}` }}>
-              <strong style={{ color: '#FF9500', display: 'block', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
+            <div style={{ background: 'rgba(253, 255, 249, 0.95)', padding: '1rem 1.2rem', borderRadius: '16px', borderLeft: '5px solid #B86B18', border: '1px solid rgba(26, 51, 35, 0.1)' }}>
+              <strong style={{ color: '#B86B18', display: 'block', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '0.3rem', fontWeight: 800 }}>
                 4. Herbal Support
               </strong>
-              <p style={{ color: '#DAF1DE', fontSize: '0.92rem', margin: 0 }}>
+              <p style={{ color: '#2B4534', fontSize: '0.92rem', margin: 0, fontWeight: 500 }}>
                 {selectedSymptom.protocol.herbalReset}
               </p>
             </div>

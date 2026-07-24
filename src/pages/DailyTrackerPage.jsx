@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { CheckCircle2, Flame, Sparkles, Calendar, Award, Sun, Moon, Coffee } from 'lucide-react';
+import { CheckCircle2, Flame } from 'lucide-react';
 
 export const DailyTrackerPage = () => {
   const { currentUser } = useAuth();
@@ -18,7 +18,6 @@ export const DailyTrackerPage = () => {
   const [checkedHabits, setCheckedHabits] = useState({});
   const [streakDays, setStreakDays] = useState(1);
 
-  // Load tracker state from localStorage
   useEffect(() => {
     if (!currentUser) return;
     try {
@@ -27,14 +26,8 @@ export const DailyTrackerPage = () => {
         setCheckedHabits(stored[todayKey]);
       }
       
-      // Calculate streak
       const dateKeys = Object.keys(stored).sort();
-      let streak = 0;
-      if (dateKeys.length > 0) {
-        streak = dateKeys.length;
-      } else {
-        streak = 1;
-      }
+      let streak = dateKeys.length > 0 ? dateKeys.length : 1;
       setStreakDays(streak);
     } catch (e) {
       console.error('Error loading habit tracker:', e);
@@ -48,7 +41,6 @@ export const DailyTrackerPage = () => {
     };
     setCheckedHabits(updated);
 
-    // Save to localStorage
     if (currentUser) {
       const stored = JSON.parse(localStorage.getItem(`ayurveda_tracker_${currentUser.id}`) || '{}');
       stored[todayKey] = updated;
@@ -60,57 +52,59 @@ export const DailyTrackerPage = () => {
   const completionPct = Math.round((completedCount / habits.length) * 100);
 
   return (
-    <div className="container" style={{ padding: '2.5rem 1rem', maxWidth: '720px', margin: '0 auto' }}>
+    <div className="container" style={{ padding: '2.5rem 1rem', maxWidth: '760px', margin: '0 auto' }}>
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '1.75rem', color: '#FFFFFF', marginBottom: '0.4rem' }}>
+        <h1 className="font-serif-title" style={{ fontSize: '1.85rem', color: '#1A3323', marginBottom: '0.4rem', fontWeight: 800 }}>
           Daily Dinacharya Habit Tracker
         </h1>
-        <p style={{ color: '#B8D8C2', fontSize: '0.95rem' }}>
+        <p style={{ color: '#567360', fontSize: '0.96rem', fontWeight: 500 }}>
           Build consistency with time-tested Ayurvedic daily rituals for lasting vitality
         </p>
       </div>
 
       {/* Streak & Score Banner */}
       <div className="glass-card" style={{
-        padding: '1.5rem 2rem',
-        borderRadius: '24px',
+        padding: '1.75rem 2rem',
+        borderRadius: '28px',
         marginBottom: '2rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
         gap: '1rem',
-        background: 'linear-gradient(135deg, rgba(35, 83, 71, 0.9) 0%, rgba(11, 43, 38, 0.95) 100%)'
+        background: 'linear-gradient(135deg, rgba(249, 251, 242, 0.95) 0%, rgba(240, 247, 232, 0.9) 100%)',
+        border: '1.5px solid #BAE164'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <div style={{
-            background: 'linear-gradient(135deg, #FF9500 0%, #FFB84D 100%)',
-            width: '56px',
-            height: '56px',
-            borderRadius: '18px',
+            background: 'linear-gradient(135deg, #B86B18 0%, #D97A24 100%)',
+            width: '58px',
+            height: '58px',
+            borderRadius: '20px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 6px 18px rgba(255, 149, 0, 0.35)'
+            boxShadow: '0 6px 18px rgba(184, 107, 24, 0.35)',
+            border: '1px solid #FEFEFE'
           }}>
-            <Flame size={30} color="#FFFFFF" />
+            <Flame size={32} color="#FEFEFE" />
           </div>
           <div>
-            <div style={{ fontSize: '0.8rem', color: '#FFB84D', fontWeight: 700, textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '0.8rem', color: '#B86B18', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Active Habit Streak
             </div>
-            <h2 style={{ fontSize: '1.6rem', color: '#FFFFFF', margin: 0 }}>
+            <h2 className="font-serif-title" style={{ fontSize: '1.65rem', color: '#1A3323', margin: 0, fontWeight: 900 }}>
               {streakDays} Day{streakDays > 1 ? 's' : ''} Streak 🔥
             </h2>
           </div>
         </div>
 
         <div style={{ textAlign: 'right' }}>
-          <div style={{ fontSize: '0.8rem', color: '#8EB69B', fontWeight: 700, textTransform: 'uppercase' }}>
+          <div style={{ fontSize: '0.8rem', color: '#1A3323', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Today's Completion
           </div>
-          <span style={{ fontSize: '1.6rem', fontWeight: 800, color: '#DAF1DE' }}>
+          <span style={{ fontSize: '1.8rem', fontWeight: 900, color: '#1A3323' }}>
             {completionPct}%
           </span>
         </div>
@@ -126,54 +120,56 @@ export const DailyTrackerPage = () => {
               onClick={() => toggleHabit(habit.id)}
               className="glass-card"
               style={{
-                borderRadius: '20px',
-                padding: '1.25rem 1.5rem',
+                borderRadius: '22px',
+                padding: '1.35rem 1.6rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '1.2rem',
+                gap: '1.25rem',
                 cursor: 'pointer',
-                border: isDone ? '2px solid #FF9500' : '1px solid rgba(142, 182, 155, 0.25)',
-                background: isDone ? 'rgba(35, 83, 71, 0.75)' : 'rgba(5, 31, 32, 0.6)',
-                transition: 'all 0.2s ease'
+                border: isDone ? '2px solid #BAE164' : '1.5px solid rgba(26, 51, 35, 0.15)',
+                background: isDone ? 'rgba(240, 247, 232, 0.95)' : 'rgba(253, 255, 249, 0.8)',
+                transition: 'all 0.22s ease'
               }}
             >
-              {/* Checkbox circle */}
+              {/* Checkbox Circle */}
               <div style={{
-                width: '32px',
-                height: '32px',
+                width: '34px',
+                height: '34px',
                 borderRadius: '50%',
-                border: isDone ? 'none' : '2px solid #8EB69B',
-                background: isDone ? '#FF9500' : 'transparent',
+                border: isDone ? 'none' : '2px solid #1A3323',
+                background: isDone ? 'linear-gradient(135deg, #1A3323 0%, #2B5738 100%)' : 'transparent',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0
               }}>
-                {isDone && <CheckCircle2 size={22} color="#FFFFFF" />}
+                {isDone && <CheckCircle2 size={24} color="#BAE164" />}
               </div>
 
               <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.25rem' }}>
                   <h3 style={{
-                    fontSize: '1.05rem',
-                    color: isDone ? '#FFFFFF' : '#DAF1DE',
+                    fontSize: '1.08rem',
+                    color: '#1A3323',
                     textDecoration: isDone ? 'line-through' : 'none',
-                    margin: 0
+                    margin: 0,
+                    fontWeight: 700
                   }}>
                     {habit.title}
                   </h3>
                   <span style={{
-                    fontSize: '0.72rem',
-                    background: 'rgba(142, 182, 155, 0.2)',
-                    color: '#8EB69B',
-                    padding: '0.2rem 0.6rem',
+                    fontSize: '0.74rem',
+                    background: 'rgba(186, 225, 100, 0.3)',
+                    color: '#1A3323',
+                    padding: '0.2rem 0.65rem',
                     borderRadius: '50px',
-                    fontWeight: 600
+                    fontWeight: 800,
+                    textTransform: 'uppercase'
                   }}>
                     {habit.time}
                   </span>
                 </div>
-                <p style={{ fontSize: '0.85rem', color: isDone ? '#B8D8C2' : 'rgba(184, 216, 194, 0.7)', margin: 0 }}>
+                <p style={{ fontSize: '0.88rem', color: isDone ? '#567360' : '#2B4534', margin: 0, fontWeight: 500 }}>
                   {habit.desc}
                 </p>
               </div>

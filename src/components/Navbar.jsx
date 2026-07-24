@@ -8,7 +8,6 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
 
   if (!currentUser) return null;
 
-  // Exact navigation item order requested
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'assessment', label: 'Assessment', icon: ClipboardList },
@@ -22,64 +21,63 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
 
   return (
     <>
-      {/* Top Navigation Bar */}
+      {/* Top Header Navigation Bar */}
       <header className="no-print" style={{
-        background: 'rgba(5, 31, 32, 0.92)',
-        backdropFilter: 'blur(16px)',
-        borderBottom: '1px solid rgba(142, 182, 155, 0.25)',
+        background: 'rgba(249, 251, 242, 0.85)',
+        backdropFilter: 'blur(24px) saturate(190%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(190%)',
+        borderBottom: '1.5px solid rgba(186, 225, 100, 0.4)',
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+        boxShadow: '0 8px 32px rgba(26, 51, 35, 0.06)'
       }}>
         <div className="container" style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          height: '70px'
+          height: '72px'
         }}>
-          {/* Logo Branding */}
+          {/* Logo Branding - Organic Luxury Pine Sparkle */}
           <div 
             onClick={() => setActiveTab('dashboard')} 
-            style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer', flexShrink: 0 }}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', flexShrink: 0 }}
           >
             <div style={{
-              background: 'linear-gradient(135deg, #FF9500 0%, #FFB84D 100%)',
-              width: '42px',
-              height: '42px',
-              borderRadius: '12px',
+              background: 'linear-gradient(135deg, #1A3323 0%, #2B5738 50%, #BAE164 100%)',
+              width: '44px',
+              height: '44px',
+              borderRadius: '14px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 4px 12px rgba(255, 149, 0, 0.35)'
+              boxShadow: '0 6px 18px rgba(26, 51, 35, 0.25)',
+              border: '1px solid #BAE164'
             }}>
-              <Leaf size={24} color="#FFFFFF" />
+              <Leaf size={24} color="#FEFEFE" />
             </div>
             <div>
-              <h2 style={{ fontSize: '1.25rem', margin: 0, color: '#FFFFFF', lineHeight: 1.1 }}>
-                AyurVeda<span style={{ color: '#FF9500' }}>Life</span>
+              <h2 className="font-serif-title" style={{ fontSize: '1.3rem', margin: 0, color: '#1A3323', lineHeight: 1.1, fontWeight: 800 }}>
+                AyurVeda<span style={{ color: '#B86B18' }}>Life</span>
               </h2>
-              <span style={{ fontSize: '0.68rem', color: '#8EB69B', letterSpacing: '0.05em', textTransform: 'uppercase', fontWeight: 600 }}>
-                Wellness Advisor
+              <span style={{ fontSize: '0.65rem', color: '#1A3323', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 800 }}>
+                Organic Wellness Advisor
               </span>
             </div>
           </div>
 
-          {/* Desktop Navigation Links with custom color-grade ultra-thin scrollbar */}
+          {/* Desktop Navigation Links */}
           <nav className="desktop-nav" style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.35rem',
             overflowX: 'auto',
             padding: '0.3rem 0.5rem',
-            maxWidth: 'calc(100% - 180px)',
-            scrollbarWidth: 'thin',
-            scrollbarColor: '#235347 #051F20'
+            maxWidth: 'calc(100% - 190px)'
           }}>
             {navItems.map(item => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
-              // Shortened labels for top bar on desktop for clean look
               const shortLabel = item.id === 'tracker' ? 'Daily Habits' :
                                  item.id === 'herbs' ? 'Herbs & Recipes' :
                                  item.id === 'breathwork' ? 'Breathing Timer' :
@@ -89,24 +87,25 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
                   style={{
-                    background: isActive ? 'rgba(35, 83, 71, 0.85)' : 'transparent',
-                    color: isActive ? '#FFFFFF' : '#B8D8C2',
-                    border: isActive ? '1px solid #8EB69B' : '1px solid transparent',
-                    borderRadius: '10px',
-                    padding: '0.45rem 0.85rem',
+                    background: isActive ? 'linear-gradient(135deg, #1A3323 0%, #2B5738 100%)' : 'transparent',
+                    color: isActive ? '#FEFEFE' : '#1A3323',
+                    border: isActive ? '1.5px solid #BAE164' : '1.5px solid transparent',
+                    borderRadius: '12px',
+                    padding: '0.48rem 0.9rem',
                     fontFamily: 'Outfit, sans-serif',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     fontSize: '0.85rem',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.4rem',
+                    gap: '0.45rem',
                     whiteSpace: 'nowrap',
-                    transition: 'all 0.2s ease',
+                    transition: 'all 0.22s ease',
+                    boxShadow: isActive ? '0 4px 14px rgba(26, 51, 35, 0.25)' : 'none',
                     flexShrink: 0
                   }}
                 >
-                  <Icon size={16} color={isActive ? '#FF9500' : '#8EB69B'} />
+                  <Icon size={16} color={isActive ? '#BAE164' : '#B86B18'} />
                   {shortLabel}
                 </button>
               );
@@ -116,17 +115,17 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
               onClick={logoutUser}
               title="Logout"
               style={{
-                background: 'rgba(255, 149, 0, 0.15)',
-                color: '#FFB84D',
-                border: '1px solid rgba(255, 149, 0, 0.4)',
-                borderRadius: '10px',
-                padding: '0.45rem 0.75rem',
+                background: 'rgba(184, 107, 24, 0.12)',
+                color: '#B86B18',
+                border: '1.5px solid rgba(184, 107, 24, 0.35)',
+                borderRadius: '12px',
+                padding: '0.48rem 0.8rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.3rem',
-                fontSize: '0.8rem',
-                fontWeight: 600,
+                gap: '0.35rem',
+                fontSize: '0.82rem',
+                fontWeight: 800,
                 flexShrink: 0
               }}
             >
@@ -140,20 +139,20 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
             className="mobile-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             style={{
-              background: 'rgba(35, 83, 71, 0.6)',
-              border: '1px solid #8EB69B',
-              color: '#FFFFFF',
-              borderRadius: '12px',
+              background: 'var(--ceramic)',
+              border: '1.5px solid #BAE164',
+              color: '#1A3323',
+              borderRadius: '14px',
               padding: '0.55rem 0.85rem',
               cursor: 'pointer',
               display: 'none',
               alignItems: 'center',
               gap: '0.5rem',
-              fontWeight: 600,
+              fontWeight: 800,
               fontSize: '0.85rem'
             }}
           >
-            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            {mobileMenuOpen ? <X size={22} color="#1A3323" /> : <Menu size={22} color="#1A3323" />}
             <span>Menu</span>
           </button>
         </div>
@@ -166,12 +165,13 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
           onClick={() => setMobileMenuOpen(false)}
           style={{
             position: 'fixed',
-            top: '70px',
+            top: '72px',
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'rgba(5, 31, 32, 0.75)',
-            backdropFilter: 'blur(8px)',
+            background: 'rgba(26, 51, 35, 0.45)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
             zIndex: 99,
             display: 'flex',
             animation: 'fadeIn 0.2s ease'
@@ -183,28 +183,28 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
               width: '85%',
               maxWidth: '340px',
               height: '100%',
-              background: '#0B2B26',
-              borderRight: '1px solid #8EB69B',
+              background: 'rgba(253, 255, 249, 0.96)',
+              backdropFilter: 'blur(28px)',
+              borderRight: '1.5px solid #BAE164',
               padding: '1.25rem 1rem',
-              boxShadow: '10px 0 30px rgba(0,0,0,0.6)',
+              boxShadow: '10px 0 35px rgba(26, 51, 35, 0.18)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
               overflowY: 'auto'
             }}
           >
-            {/* Top-to-bottom Left-aligned Nav Menu List */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
               <div style={{
                 fontSize: '0.75rem',
-                fontWeight: 700,
-                color: '#8EB69B',
+                fontWeight: 800,
+                color: '#1A3323',
                 textTransform: 'uppercase',
-                letterSpacing: '0.06em',
+                letterSpacing: '0.08em',
                 marginBottom: '0.4rem',
                 paddingLeft: '0.5rem'
               }}>
-                Navigation Menu
+                Ayurvedic Menu
               </div>
 
               {navItems.map(item => {
@@ -218,12 +218,12 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
                       setMobileMenuOpen(false);
                     }}
                     style={{
-                      background: isActive ? 'linear-gradient(135deg, rgba(35,83,71,0.9) 0%, rgba(11,43,38,0.95) 100%)' : 'rgba(5, 31, 32, 0.6)',
-                      color: isActive ? '#FFFFFF' : '#DAF1DE',
-                      border: isActive ? '1px solid #FF9500' : '1px solid rgba(142, 182, 155, 0.2)',
-                      borderRadius: '14px',
+                      background: isActive ? 'linear-gradient(135deg, #1A3323 0%, #2B5738 100%)' : 'rgba(240, 247, 232, 0.7)',
+                      color: isActive ? '#FEFEFE' : '#1A3323',
+                      border: isActive ? '1.5px solid #BAE164' : '1.5px solid rgba(26, 51, 35, 0.15)',
+                      borderRadius: '16px',
                       padding: '0.85rem 1rem',
-                      fontWeight: 600,
+                      fontWeight: 700,
                       fontSize: '0.92rem',
                       display: 'flex',
                       alignItems: 'center',
@@ -231,12 +231,12 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
                       textAlign: 'left',
                       width: '100%',
                       cursor: 'pointer',
-                      boxShadow: isActive ? '0 4px 15px rgba(255,149,0,0.2)' : 'none',
+                      boxShadow: isActive ? '0 6px 18px rgba(26, 51, 35, 0.25)' : 'none',
                       transition: 'all 0.2s ease'
                     }}
                   >
                     <div style={{
-                      background: isActive ? '#FF9500' : 'rgba(35, 83, 71, 0.5)',
+                      background: isActive ? 'rgba(186, 225, 100, 0.25)' : 'rgba(184, 107, 24, 0.12)',
                       borderRadius: '10px',
                       padding: '0.4rem',
                       display: 'flex',
@@ -244,7 +244,7 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
                       justifyContent: 'center',
                       flexShrink: 0
                     }}>
-                      <Icon size={18} color={isActive ? '#FFFFFF' : '#8EB69B'} />
+                      <Icon size={18} color={isActive ? '#BAE164' : '#B86B18'} />
                     </div>
                     
                     <span style={{ lineHeight: '1.2' }}>{item.label}</span>
@@ -253,17 +253,16 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
               })}
             </div>
 
-            {/* Logout at bottom of drawer */}
-            <div style={{ paddingTop: '1rem', borderTop: '1px solid rgba(142, 182, 155, 0.2)', marginTop: '1rem' }}>
+            <div style={{ paddingTop: '1rem', borderTop: '1.5px solid rgba(26, 51, 35, 0.15)', marginTop: '1rem' }}>
               <button
                 onClick={logoutUser}
                 style={{
-                  background: 'rgba(255, 149, 0, 0.15)',
-                  color: '#FFB84D',
-                  border: '1px solid #FF9500',
+                  background: 'rgba(184, 107, 24, 0.12)',
+                  color: '#B86B18',
+                  border: '1.5px solid #B86B18',
                   borderRadius: '14px',
                   padding: '0.85rem 1rem',
-                  fontWeight: 600,
+                  fontWeight: 800,
                   fontSize: '0.95rem',
                   display: 'flex',
                   alignItems: 'center',
@@ -280,23 +279,7 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
         </div>
       )}
 
-      {/* Media Query Styles */}
       <style>{`
-        /* Custom sleek thin scrollbar for top desktop nav */
-        .desktop-nav::-webkit-scrollbar {
-          height: 4px;
-        }
-        .desktop-nav::-webkit-scrollbar-track {
-          background: rgba(5, 31, 32, 0.9);
-        }
-        .desktop-nav::-webkit-scrollbar-thumb {
-          background: rgba(35, 83, 71, 0.8);
-          border-radius: 10px;
-        }
-        .desktop-nav::-webkit-scrollbar-thumb:hover {
-          background: #FF9500;
-        }
-
         @media (max-width: 1024px) {
           .desktop-nav { display: none !important; }
           .mobile-toggle { display: flex !important; }
