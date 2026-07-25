@@ -16,6 +16,7 @@ import { VikritiResetPage } from './pages/VikritiResetPage';
 import { WellnessReportPage } from './pages/WellnessReportPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { Leaf } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 
 const CLERK_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -129,6 +130,7 @@ export default function App() {
         <AuthProvider>
           <DoshaProvider>
             <MainApp />
+            <Analytics />
           </DoshaProvider>
         </AuthProvider>
       </ClerkProvider>
@@ -139,6 +141,7 @@ export default function App() {
     <AuthProvider>
       <DoshaProvider>
         <MainApp />
+        <Analytics />
       </DoshaProvider>
     </AuthProvider>
   );
