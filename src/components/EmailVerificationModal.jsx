@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { ShieldCheck, AlertCircle, RefreshCw, MailCheck, Loader2 } from 'lucide-react';
+import { ShieldCheck, AlertCircle, RefreshCw, MailCheck, Loader2, Clipboard } from 'lucide-react';
 
 export const EmailVerificationModal = () => {
   const { 
@@ -27,6 +27,31 @@ export const EmailVerificationModal = () => {
     }
 
     await confirmEmailOtp(otpCode);
+  };
+
+  const handlePasteCode = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      const cleanDigits = text.replace(/[^0-9]/g, '').slice(0, 6);
+      if (cleanDigits) {
+        setInputCode(cleanDigits);
+        setAuthError('');
+      } else {
+        setAuthError('No 6-digit code found in clipboard.');
+      }
+    } catch (err) {
+      setAuthError('Clipboard access restricted. Please paste directly into the input field.');
+    }
+  };
+
+  const handleInputPaste = (e) => {
+    e.preventDefault();
+    const pastedText = e.clipboardData.getData('text');
+    const cleanDigits = pastedText.replace(/[^0-9]/g, '').slice(0, 6);
+    if (cleanDigits) {
+      setInputCode(cleanDigits);
+      setAuthError('');
+    }
   };
 
   return (
@@ -63,6 +88,7 @@ export const EmailVerificationModal = () => {
           </p>
         </div>
 
+        {/* Clean Live Email Dispatch Status */}
         <div style={{
           background: 'rgba(240, 247, 232, 0.95)',
           border: '1.5px solid #BAE164',
@@ -105,9 +131,34 @@ export const EmailVerificationModal = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label" style={{ textAlign: 'center', display: 'block', marginBottom: '0.4rem' }}>
-              Enter 6-Digit Code Received in Email
-            </label>
+            {/* Header line with Label and Paste Code Option right above the input line */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.45rem' }}>
+              <label className="form-label" style={{ marginBottom: 0 }}>
+                Enter 6-Digit Verification Code
+              </label>
+
+              <button
+                type="button"
+                onClick={handlePasteCode}
+                style={{
+                  background: 'linear-gradient(135deg, #1A3323 0%, #2B5738 100%)',
+                  color: '#BAE164',
+                  border: '1.5px solid #BAE164',
+                  borderRadius: '8px',
+                  padding: '0.28rem 0.7rem',
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  boxShadow: '0 2px 8px rgba(26, 51, 35, 0.2)'
+                }}
+              >
+                <Clipboard size={14} color="#BAE164" /> Paste Code
+              </button>
+            </div>
+
             <input
               type="text"
               className="form-input"
@@ -115,6 +166,7 @@ export const EmailVerificationModal = () => {
               placeholder="Enter 6-digit code"
               value={inputCode}
               onChange={(e) => setInputCode(e.target.value.replace(/[^0-9]/g, ''))}
+              onPaste={handleInputPaste}
               style={{
                 textAlign: 'center',
                 fontSize: '1.65rem',

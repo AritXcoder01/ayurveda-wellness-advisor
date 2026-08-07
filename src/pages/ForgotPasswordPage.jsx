@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Mail, KeyRound, Lock, ArrowLeft, ArrowRight, ShieldCheck, CheckCircle2, AlertCircle, MailCheck } from 'lucide-react';
+import { Mail, KeyRound, Lock, ArrowLeft, ArrowRight, ShieldCheck, CheckCircle2, AlertCircle, MailCheck, Clipboard } from 'lucide-react';
 
 export const ForgotPasswordPage = ({ onSwitchToLogin }) => {
   const { 
@@ -33,20 +33,20 @@ export const ForgotPasswordPage = ({ onSwitchToLogin }) => {
     }
   };
 
-  const handleVerifyCode = (e) => {
+  const handleVerifyCode = async (e) => {
     e.preventDefault();
     setAuthError('');
     if (!codeInput.trim() || codeInput.trim().length !== 6) {
       setAuthError('Please enter the full 6-digit code received on your email.');
       return;
     }
-    const verified = verifyForgotPasswordOtp(codeInput.trim());
+    const verified = await verifyForgotPasswordOtp(codeInput.trim());
     if (verified) {
       setStep(3);
     }
   };
 
-  const handleResetPassword = (e) => {
+  const handleResetPassword = async (e) => {
     e.preventDefault();
     setAuthError('');
     if (!newPassword || !confirmPassword) {
@@ -62,9 +62,34 @@ export const ForgotPasswordPage = ({ onSwitchToLogin }) => {
       return;
     }
 
-    const success = resetPassword(newPassword);
+    const success = await resetPassword(newPassword);
     if (success) {
       setStep(4);
+    }
+  };
+
+  const handlePasteCode = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      const cleanDigits = text.replace(/[^0-9]/g, '').slice(0, 6);
+      if (cleanDigits) {
+        setCodeInput(cleanDigits);
+        setAuthError('');
+      } else {
+        setAuthError('No 6-digit code found in clipboard.');
+      }
+    } catch (err) {
+      setAuthError('Clipboard access restricted. Please paste directly into the input field.');
+    }
+  };
+
+  const handleInputPaste = (e) => {
+    e.preventDefault();
+    const pastedText = e.clipboardData.getData('text');
+    const cleanDigits = pastedText.replace(/[^0-9]/g, '').slice(0, 6);
+    if (cleanDigits) {
+      setCodeInput(cleanDigits);
+      setAuthError('');
     }
   };
 
@@ -215,9 +240,34 @@ export const ForgotPasswordPage = ({ onSwitchToLogin }) => {
             </div>
 
             <div className="form-group">
-              <label className="form-label" style={{ textAlign: 'center', display: 'block' }}>
-                6-Digit Email Reset Code
-              </label>
+              {/* Header line with Label and Paste Code Option right above the input line */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.45rem' }}>
+                <label className="form-label" style={{ marginBottom: 0 }}>
+                  6-Digit Email Reset Code
+                </label>
+
+                <button
+                  type="button"
+                  onClick={handlePasteCode}
+                  style={{
+                    background: 'linear-gradient(135deg, #1A3323 0%, #2B5738 100%)',
+                    color: '#BAE164',
+                    border: '1.5.px solid #BAE164',
+                    borderRadius: '8px',
+                    padding: '0.28rem 0.7rem',
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    boxShadow: '0 2px 8px rgba(26, 51, 35, 0.2)'
+                  }}
+                >
+                  <Clipboard size={14} color="#BAE164" /> Paste Code
+                </button>
+              </div>
+
               <input
                 type="text"
                 className="form-input"
@@ -225,6 +275,7 @@ export const ForgotPasswordPage = ({ onSwitchToLogin }) => {
                 placeholder="Enter 6-digit code"
                 value={codeInput}
                 onChange={(e) => setCodeInput(e.target.value.replace(/[^0-9]/g, ''))}
+                onPaste={handleInputPaste}
                 style={{
                   textAlign: 'center',
                   fontSize: '1.6rem',
@@ -249,9 +300,10 @@ export const ForgotPasswordPage = ({ onSwitchToLogin }) => {
               <button
                 type="submit"
                 className="btn-primary"
+                disabled={isSendingEmail}
                 style={{ flex: 1 }}
               >
-                Verify Code <ShieldCheck size={18} />
+                {isSendingEmail ? 'Verifying...' : 'Verify Code'} <ShieldCheck size={18} />
               </button>
             </div>
           </form>
@@ -295,9 +347,10 @@ export const ForgotPasswordPage = ({ onSwitchToLogin }) => {
             <button
               type="submit"
               className="btn-primary"
+              disabled={isSendingEmail}
               style={{ width: '100%', padding: '0.95rem', marginTop: '0.5rem' }}
             >
-              Update Password & Complete
+              {isSendingEmail ? 'Updating...' : 'Update Password & Complete'}
             </button>
           </form>
         )}
