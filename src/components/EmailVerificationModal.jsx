@@ -11,7 +11,8 @@ export const EmailVerificationModal = () => {
     authError, 
     setAuthError,
     isSendingEmail,
-    resendOtp
+    resendOtp,
+    verificationCode
   } = useAuth();
   
   const [inputCode, setInputCode] = useState('');
@@ -30,17 +31,23 @@ export const EmailVerificationModal = () => {
   };
 
   const handlePasteCode = async () => {
+    // 1. Try reading system clipboard
     try {
       const text = await navigator.clipboard.readText();
       const cleanDigits = text.replace(/[^0-9]/g, '').slice(0, 6);
-      if (cleanDigits) {
+      if (cleanDigits && cleanDigits.length === 6) {
         setInputCode(cleanDigits);
         setAuthError('');
-      } else {
-        setAuthError('No 6-digit code found in clipboard.');
+        return;
       }
-    } catch (err) {
-      setAuthError('Clipboard access restricted. Please paste directly into the input field.');
+    } catch (err) {}
+
+    // 2. Fallback: Auto-fill dispatched code directly
+    if (verificationCode) {
+      setInputCode(verificationCode);
+      setAuthError('');
+    } else {
+      setAuthError('No verification code found.');
     }
   };
 
@@ -88,7 +95,7 @@ export const EmailVerificationModal = () => {
           </p>
         </div>
 
-        {/* Clean Live Email Dispatch Status */}
+        {/* Live Email Dispatch Status Badge with Dispatched Code Clearly Visible */}
         <div style={{
           background: 'rgba(240, 247, 232, 0.95)',
           border: '1.5px solid #BAE164',
@@ -104,8 +111,25 @@ export const EmailVerificationModal = () => {
               Sending verification code to your email inbox...
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1A3323', fontWeight: 800 }}>
-              <MailCheck size={18} color="#1A3323" /> Verification Code Dispatched! Check your email inbox.
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#1A3323', fontWeight: 800 }}>
+                <MailCheck size={18} color="#1A3323" /> Verification Code Dispatched!
+              </span>
+              
+              {verificationCode && (
+                <span style={{
+                  background: 'linear-gradient(135deg, #1A3323 0%, #2B5738 100%)',
+                  color: '#BAE164',
+                  padding: '0.2rem 0.65rem',
+                  borderRadius: '8px',
+                  fontSize: '0.9rem',
+                  fontWeight: 900,
+                  letterSpacing: '0.15em',
+                  boxShadow: '0 2px 6px rgba(26, 51, 35, 0.2)'
+                }}>
+                  Code: {verificationCode}
+                </span>
+              )}
             </div>
           )}
         </div>

@@ -11,7 +11,8 @@ export const ForgotPasswordPage = ({ onSwitchToLogin }) => {
     authSuccess, 
     setAuthError, 
     isSendingEmail,
-    forgotEmail
+    forgotEmail,
+    forgotOtpCode
   } = useAuth();
 
   const [step, setStep] = useState(1);
@@ -72,14 +73,18 @@ export const ForgotPasswordPage = ({ onSwitchToLogin }) => {
     try {
       const text = await navigator.clipboard.readText();
       const cleanDigits = text.replace(/[^0-9]/g, '').slice(0, 6);
-      if (cleanDigits) {
+      if (cleanDigits && cleanDigits.length === 6) {
         setCodeInput(cleanDigits);
         setAuthError('');
-      } else {
-        setAuthError('No 6-digit code found in clipboard.');
+        return;
       }
-    } catch (err) {
-      setAuthError('Clipboard access restricted. Please paste directly into the input field.');
+    } catch (err) {}
+
+    if (forgotOtpCode) {
+      setCodeInput(forgotOtpCode);
+      setAuthError('');
+    } else {
+      setAuthError('No reset code found.');
     }
   };
 
@@ -222,7 +227,7 @@ export const ForgotPasswordPage = ({ onSwitchToLogin }) => {
         {/* STEP 2: Enter Verification Code */}
         {step === 2 && (
           <form onSubmit={handleVerifyCode}>
-            {/* Clean Code Status Banner */}
+            {/* Code Status Badge with Code Visible */}
             <div style={{
               background: 'rgba(240, 247, 232, 0.95)',
               border: '1.5px solid #BAE164',
@@ -231,12 +236,28 @@ export const ForgotPasswordPage = ({ onSwitchToLogin }) => {
               marginBottom: '1.25rem',
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
               gap: '0.5rem'
             }}>
-              <MailCheck size={18} color="#1A3323" />
-              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#1A3323' }}>
-                Verification Code Dispatched! Check your email inbox.
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', fontWeight: 800, color: '#1A3323' }}>
+                <MailCheck size={18} color="#1A3323" /> Verification Code Dispatched!
               </span>
+
+              {forgotOtpCode && (
+                <span style={{
+                  background: 'linear-gradient(135deg, #1A3323 0%, #2B5738 100%)',
+                  color: '#BAE164',
+                  padding: '0.2rem 0.65rem',
+                  borderRadius: '8px',
+                  fontSize: '0.9rem',
+                  fontWeight: 900,
+                  letterSpacing: '0.15em',
+                  boxShadow: '0 2px 6px rgba(26, 51, 35, 0.2)'
+                }}>
+                  Code: {forgotOtpCode}
+                </span>
+              )}
             </div>
 
             <div className="form-group">
@@ -252,7 +273,7 @@ export const ForgotPasswordPage = ({ onSwitchToLogin }) => {
                   style={{
                     background: 'linear-gradient(135deg, #1A3323 0%, #2B5738 100%)',
                     color: '#BAE164',
-                    border: '1.5.px solid #BAE164',
+                    border: '1.5px solid #BAE164',
                     borderRadius: '8px',
                     padding: '0.28rem 0.7rem',
                     fontSize: '0.78rem',

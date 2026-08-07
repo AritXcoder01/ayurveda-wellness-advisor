@@ -3,9 +3,9 @@ import { useAuth } from '../context/AuthContext';
 import { Leaf, User, Mail, Lock, ArrowRight, ShieldCheck, MailCheck, Loader2, Clipboard, RefreshCw } from 'lucide-react';
 
 export const RegisterPage = ({ onSwitchToLogin }) => {
-  const { registerUser, confirmEmailOtp, authError, setAuthError, isSendingEmail, resendOtp } = useAuth();
+  const { registerUser, confirmEmailOtp, authError, setAuthError, isSendingEmail, resendOtp, verificationCode } = useAuth();
   
-  const [step, setStep] = useState(1); // 1 = Registration form, 2 = Inline 6-digit OTP verification on same page
+  const [step, setStep] = useState(1);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -44,7 +44,7 @@ export const RegisterPage = ({ onSwitchToLogin }) => {
 
     const success = await registerUser(name, email, password, age, gender);
     if (success) {
-      setStep(2); // Seamless inline transition on same page
+      setStep(2);
     }
   };
 
@@ -63,14 +63,18 @@ export const RegisterPage = ({ onSwitchToLogin }) => {
     try {
       const text = await navigator.clipboard.readText();
       const cleanDigits = text.replace(/[^0-9]/g, '').slice(0, 6);
-      if (cleanDigits) {
+      if (cleanDigits && cleanDigits.length === 6) {
         setOtpCode(cleanDigits);
         setAuthError('');
-      } else {
-        setAuthError('No 6-digit code found in clipboard.');
+        return;
       }
-    } catch (err) {
-      setAuthError('Clipboard access restricted. Please paste directly into the input field.');
+    } catch (err) {}
+
+    if (verificationCode) {
+      setOtpCode(verificationCode);
+      setAuthError('');
+    } else {
+      setAuthError('No verification code found.');
     }
   };
 
@@ -268,8 +272,25 @@ export const RegisterPage = ({ onSwitchToLogin }) => {
                   Sending code to email...
                 </div>
               ) : (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1A3323', fontWeight: 800 }}>
-                  <MailCheck size={18} color="#1A3323" /> Verification Code Dispatched! Check your email inbox.
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#1A3323', fontWeight: 800 }}>
+                    <MailCheck size={18} color="#1A3323" /> Verification Code Dispatched!
+                  </span>
+
+                  {verificationCode && (
+                    <span style={{
+                      background: 'linear-gradient(135deg, #1A3323 0%, #2B5738 100%)',
+                      color: '#BAE164',
+                      padding: '0.2rem 0.65rem',
+                      borderRadius: '8px',
+                      fontSize: '0.9rem',
+                      fontWeight: 900,
+                      letterSpacing: '0.15em',
+                      boxShadow: '0 2px 6px rgba(26, 51, 35, 0.2)'
+                    }}>
+                      Code: {verificationCode}
+                    </span>
+                  )}
                 </div>
               )}
             </div>
